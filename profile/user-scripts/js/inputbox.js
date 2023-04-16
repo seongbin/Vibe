@@ -192,7 +192,7 @@ function _inputbox(default_text, empty_text, text_colour, back_colour, border_co
   }
 
   this.check = (callback, x, y) => {
-    this.hover = (x >= this.x - 2 && x <= this.x + this.w + 1) && y > this.y && y < (this.y + this.h) ? true : false;
+    this.hover = (x >= this.x - 2 && x <= this.x + this.w + (this.text.length > 0 ? 0 : this.h) + 1) && y > this.y && y < (this.y + this.h) ? true : false;
     let tmp = undefined;
     let tmp_x = undefined;
     switch (callback) {
@@ -282,7 +282,7 @@ function _inputbox(default_text, empty_text, text_colour, back_colour, border_co
         }
         this.ibeam_set = (this.hover || this.drag);
         break;
-      case 'right':
+      case 'rbtn_up':
         if (this.hover) {
           this.edit = true;
           this.reset();

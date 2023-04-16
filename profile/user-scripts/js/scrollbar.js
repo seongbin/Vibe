@@ -144,7 +144,7 @@ function _scrollbar(parent) {
     if (!this.buttons[this.type.cursor])
       return;
     switch (event) {
-    case 'down':
+    case 'lbtn_down':
       let tmp = this.buttons[this.type.cursor].checkstate(event, x, y);
       if (tmp == ButtonStates.down) {
         this.cursorClickX = x;
@@ -153,7 +153,7 @@ function _scrollbar(parent) {
         this.cursorDragDelta = y - this.cursory;
       }
       break;
-    case 'up':
+    case 'lbtn_up':
       this.buttons[this.type.cursor].checkstate(event, x, y);
       if (this.cursorDrag) {
         this.set_from_cursor_pos();
@@ -206,8 +206,8 @@ function _scrollbar(parent) {
     let scroll_step_page = eval(this.parent + '.h');
 
     switch (event) {
-    case 'down':
-    case 'dblclk':
+    case 'lbtn_down':
+    case 'lbtn_dblclk':
       if ((this.isHoverCursor || this.cursorDrag) && !this.click && !this.isHoverEmptyArea) {
         this.check(event, x, y);
       } else {
@@ -217,7 +217,7 @@ function _scrollbar(parent) {
           switch (i) {
           case 1: // up button
             bt_state = this.buttons[i].checkstate(event, x, y);
-            if ((event == 'down' && bt_state == ButtonStates.down) || (event == 'dblclk' && bt_state == ButtonStates.hover)) {
+            if ((event == 'lbtn_down' && bt_state == ButtonStates.down) || (event == 'lbtn_dblclk' && bt_state == ButtonStates.hover)) {
               this.click = true;
               scroll = scroll - scroll_step;
               scroll = check_scroll(scroll);
@@ -235,7 +235,7 @@ function _scrollbar(parent) {
             break;
           case 2: // down button
             bt_state = this.buttons[i].checkstate(event, x, y);
-            if ((event == 'down' && bt_state == ButtonStates.down) || (event == 'dblclk' && bt_state == ButtonStates.hover)) {
+            if ((event == 'lbtn_down' && bt_state == ButtonStates.down) || (event == 'lbtn_dblclk' && bt_state == ButtonStates.hover)) {
               this.click = true;
               scroll = scroll + scroll_step;
               scroll = check_scroll(scroll);
@@ -289,8 +289,8 @@ function _scrollbar(parent) {
         }
       }
       break;
-    case 'right':
-    case 'up':
+    case 'lbtn_up':
+    case 'rbtn_up':
       if (this.timer) {
         window.ClearInterval(this.timer);
         this.timer = false;

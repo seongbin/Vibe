@@ -80,18 +80,19 @@ function _plm() {
     m.AppendMenuItem(0, 2, ('New Autoplaylist'));
     n.AppendTo(m, 0, 'Autoplaylist Presets');
     n.AppendMenuItem(0, 3, 'Media Library');
-    n.AppendMenuItem(0, 4, 'Recently Added');
-    n.AppendMenuItem(0, 5, 'Never Played');
+    n.AppendMenuItem(0, 4, 'Favorite');
+    n.AppendMenuItem(0, 5, 'Recently Added');
+    n.AppendMenuItem(0, 6, 'Never Played');
     m.AppendMenuSeparator();
-    m.AppendMenuItem(0, 6, ('Load playlist...'));
-    m.AppendMenuItem(0, 7, ('Save all playlists'));
+    m.AppendMenuItem(0, 7, ('Load playlist...'));
+    m.AppendMenuItem(0, 8, ('Save all playlists'));
     o.AppendTo(m, p.Count > 0 ? 0 : 1 | 2, 'Restore');
     if (p.Count > 0) { o.AppendMenuItem(0, 100, 'Clear history'); o.AppendMenuSeparator(); for (let i = 0; i < p.Count; i++) { o.AppendMenuItem(0, 101 + i, p.GetName(i)); } }
     m.AppendMenuSeparator();
-    m.AppendMenuItem(0, 8, ('Playlist Manager'));
-    // m.AppendMenuItem(_cc('foo_podcatcher') ? 0 : 1, 9, ('Podcatcher Feed Manager'));
-    m.AppendMenuItem(0, 9, ('Album List'));
-    m.AppendMenuItem(0, 10, ('ReFacets'));
+    m.AppendMenuItem(0, 9, ('Playlist Manager'));
+    m.AppendMenuItem(0, 10, ('Album List'));
+    m.AppendMenuItem(0, 11, ('ReFacets'));
+    // m.AppendMenuItem(_cc('foo_podcatcher') ? 0 : 1, 12, ('Podcatcher Feed Manager'));
     m.AppendMenuSeparator();
     m.AppendMenuItem(0, 99, ('Items'));
     m.CheckMenuItem(99, this.items.b ? 1 : 0);
@@ -100,14 +101,15 @@ function _plm() {
       case 1: plman.ActivePlaylist = plman.CreatePlaylist(plman.PlaylistCount, ''); this.rename_playlist(plman.ActivePlaylist); break;
       case 2: plman.ActivePlaylist = plman.CreateAutoPlaylist(plman.PlaylistCount, '', ''); this.rename_playlist(plman.ActivePlaylist); plman.ShowAutoPlaylistUI(plman.ActivePlaylist); break;
       case 3: plman.CreateAutoPlaylist(0, 'Media Library', 'ALL', '%album artist%%date%%album%%discnumber%%subsong%', 1); break;
-      case 4: plman.CreateAutoPlaylist(plman.PlaylistCount, 'Recently Added', '%added% DURING LAST 1 WEEK SORT DESCENDING BY %added%', 1); break;
-      case 5: plman.CreateAutoPlaylist(plman.PlaylistCount, 'Never Played', '%play_count% IS 0', 0); break;
-      case 6: fb.LoadPlaylist(); break;
-      case 7: fb.RunMainMenuCommand('File/Save All Playlists...'); break;
-      case 8: fb.RunMainMenuCommand('View/Playlist Manager'); break;
-      // case 9: fb.RunMainMenuCommand('View/Podcatcher Feed Manager'); break;
-      case 9: fb.RunMainMenuCommand('Library/Album List'); break;
-      case 10: fb.RunMainMenuCommand('Library/Refacets'); break;
+      case 4: plman.CreateAutoPlaylist(plman.PlaylistCount, 'Favorite', '%rating% IS 5', '%album artist%', 1); break;
+      case 5: plman.CreateAutoPlaylist(plman.PlaylistCount, 'Recently Added', '%added% DURING LAST 1 WEEK SORT DESCENDING BY %added%', '', 1); break;
+      case 6: plman.CreateAutoPlaylist(plman.PlaylistCount, 'Never Played', '%play_count% IS 0', '%album artist%', 1); break;
+      case 7: fb.LoadPlaylist(); break;
+      case 8: fb.RunMainMenuCommand('File/Save All Playlists...'); break;
+      case 9: fb.RunMainMenuCommand('View/Playlist Manager'); break;
+      case 10: fb.RunMainMenuCommand('Library/Album List'); break;
+      case 11: fb.RunMainMenuCommand('Library/Refacets'); break;
+      // case 12: fb.RunMainMenuCommand('View/Podcatcher Feed Manager'); break;
       case 99: this.items.toggle(); m.CheckMenuItem(8, this.items.b); window.Repaint(); break;
     }
     if (ret >= 100) {
@@ -200,16 +202,11 @@ function _plm() {
       let count_length = gr.CalcTextWidth(count, panel.fonts.normal);
       if (this.y + this.height * (i + 1) < this.y + this.h - this.height) {
         gr.FillSolidRect(this.x, this.y + this.height * (i + 1), this.w, this.height, i == plman.ActivePlaylist ? panel.colours.highlight : i == plman.PlayingPlaylist ? panel.colours.highlight & 0x24ffffff : 0);
-        if (jsp.exp.b) {
-          gr.SetTextRenderingHint(3);
-          gr.DrawString(this.arr[i][0] == 'Media Library' ? icon_char.lib : plman.IsAutoPlaylist(i) ? icon_char.apl : icon_char.npl, font, i == plman.ActivePlaylist ? 0xffffffff : i == plman.PlayingPlaylist ? panel.colours.normal : panel.colours.gray, this.x, this.y + this.height * (i + 1), this.height, this.height, SF.CENTRE);
-          gr.SetTextRenderingHint(0);
-          gr.GdiDrawText(name/*.toUpperCase()*/, panel.fonts.normal, i == plman.ActivePlaylist ? 0xffffffff : i == plman.PlayingPlaylist ? panel.colours.normal : panel.colours.gray, this.x + bs, this.y + this.height * (i + 1), this.w - this.height - (this.items.b ? count_length + ma : 0) - ma, this.height, LEFT);
-          this.items.b && gr.GdiDrawText(count, panel.fonts.normal, i == plman.ActivePlaylist ? 0xffffffff : i == plman.PlayingPlaylist ? panel.colours.normal : panel.colours.gray, this.x + this.w - ma - count_length, this.y + this.height * (i + 1), count_length, this.height, RIGHT);
-        } else {
-          gr.SetTextRenderingHint(3);
-          gr.DrawString(this.arr[i][0] == 'Media Library' ? icon_char.lib : plman.IsAutoPlaylist(i) ? icon_char.apl : icon_char.npl, font, i == plman.ActivePlaylist ? 0xffffffff : i == plman.PlayingPlaylist ? panel.colours.normal : panel.colours.gray, this.x, this.y + this.height * (i + 1), this.w, this.height, SF.CENTRE);
-        }
+        gr.SetTextRenderingHint(3);
+        gr.DrawString(this.arr[i][0] == 'Media Library' ? icon_char.lib : this.arr[i][0] == 'Favorite' ? icon_char.fav : this.arr[i][0] == 'Recently Added' ? icon_char.rct : plman.IsAutoPlaylist(i) ? icon_char.apl : icon_char.npl, font, i == plman.ActivePlaylist ? 0xffffffff : i == plman.PlayingPlaylist ? panel.colours.normal : panel.colours.gray, this.x, this.y + this.height * (i + 1), jsp.exp.b ? this.height : this.w, this.height, SF.CENTRE);
+        jsp.exp.b && gr.SetTextRenderingHint(0);
+        jsp.exp.b && gr.GdiDrawText(name/*.toUpperCase()*/, panel.fonts.normal, i == plman.ActivePlaylist ? 0xffffffff : i == plman.PlayingPlaylist ? panel.colours.normal : panel.colours.gray, this.x + bs, this.y + this.height * (i + 1), this.w - this.height - (this.items.b ? count_length + ma : 0) - ma, this.height, LEFT);
+        jsp.exp.b && this.items.b && gr.GdiDrawText(count, panel.fonts.normal, i == plman.ActivePlaylist ? 0xffffffff : i == plman.PlayingPlaylist ? panel.colours.normal : panel.colours.gray, this.x + this.w - ma - count_length, this.y + this.height * (i + 1), count_length, this.height, RIGHT);
       }
     }
   }

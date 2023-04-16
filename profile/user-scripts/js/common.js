@@ -310,7 +310,7 @@ function button(normal, hover, down) {
         this.state = this.ishover ? ButtonStates.hover : ButtonStates.normal;
         this.isdown = false;
         break;
-      case 'right':
+      case 'rbtn_up':
         break;
       case 'move':
         switch (this.state) {
