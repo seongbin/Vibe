@@ -5,7 +5,7 @@ Vibe is a simple [Spdider Moneky Panel](https://github.com/TheQwertiest/foo_spid
 * [ESLyric](https://github.com/ESLyric/release) (0.5.3)
 * [Flowin](https://github.com/ttsping/foo_flowin) (0.2.0)
 * [JSplitter](https://foobar2000.ru/forum/viewtopic.php?t=6378) (3.6.1)
-* [Playback Statistics](https://www.foobar2000.org/components/view/foo_playcount) (3.1.3)
+* [Playback Statistics](https://www.foobar2000.org/components/view/foo_playcount) (3.1.5)
 * UI Hacks (2013-02-19)
 
 ![](Preview.png)
