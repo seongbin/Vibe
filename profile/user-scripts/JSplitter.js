@@ -20,7 +20,7 @@ function _jsp() {
     this.lrc = window.GetPanel('lrc');
     this.pls = window.GetPanel('pls');
     this.bio = window.GetPanel('bio');
-    this.now.ShowCaption = this.lrc.ShowCaption = this.lrc.ShowCaption = this.pls.ShowCaption = this.bio.ShowCaption = false;
+    this.now.ShowCaption = this.lrc.ShowCaption = this.pls.ShowCaption = this.bio.ShowCaption = false;
     this.exp = new _p('VIBE.PANEL.EXPAND', false);
     this.ltp = new _p('VIBE.PANEL.LEFT', false);
     this.rtp = new _p('VIBE.PANEL.RIGHT', 0);
@@ -192,7 +192,7 @@ function _plm() {
     this.text = this.format_duration(plman.GetPlaylistItems(plman.ActivePlaylist).CalcTotalDuration());
     this.count = (this.h / this.height) | 0;
   }
-  this.size = () => { this.x = jsp.x; this.y = jsp.y - 1 + this.height * 4; this.w = jsp.w; this.h = jsp.y + jsp.h - this.y - this.height; this.update(); }
+  this.size = () => { this.x = jsp.x; this.y = jsp.y + this.height * 4; this.w = jsp.w; this.h = jsp.y + jsp.h - this.y - this.height; this.update(); }
   this.paint = gr => {
     let font = gdi.Font(icon_name, this.height / 3);
     gr.GdiDrawText(this.text, panel.fonts.normal, panel.colours.normal, this.x + bs, this.y, this.w - bs - ma, this.height, LEFT);
@@ -258,7 +258,7 @@ hacks.size = () => {
 
 function _status() {
   this.interval_func = () => { if (fb.IsPlaying && !fb.IsPaused && fb.PlaybackLength > 0) { this.repaint(); } }
-  this.lbtn_up = (x, y) => this.trace(x, y) && window.NotifyOthers('show_now_playing', '');
+  this.lbtn_dblclk = (x, y) => this.trace(x, y) && window.NotifyOthers('show_now_playing', '');
   this.repaint = () => window.RepaintRect(this.x, this.y, this.w, this.h);
   this.size = () => { this.x = 0; this.h = sh; this.y = panel.h - this.h; this.w = panel.w; }
   this.trace = (x, y) => x > this.x && x < this.x + this.w && y > this.y && y < this.y + this.h;
@@ -273,21 +273,21 @@ buttons.update = () => {
   buttons.buttons.min = new _button(panel.w - hw * 3, 0, hw, hh, { normal: _chr2img(icon_char.min, panel.colours.normal, hw, hh), hover: _chr2img(icon_char.min, panel.colours.normal, hw, hh, panel.colours.background == 0xffffffff ? panel.colours.btnface : _blendColours(panel.colours.background, panel.colours.btnface, 0.1)) }, () => { fb.RunMainMenuCommand('View/Hide'); }, '');
   buttons.buttons.max = new _button(panel.w - hw * 2, 0, hw, hh, { normal: _chr2img(hacks.uih.MainWindowState == 2 ? icon_char.max1 : icon_char.max0, panel.colours.normal, hw, hh), hover: _chr2img(hacks.uih.MainWindowState == 2 ? icon_char.max1 : icon_char.max0, panel.colours.normal, hw, hh, panel.colours.background == 0xffffffff ? panel.colours.btnface : _blendColours(panel.colours.background, panel.colours.btnface, 0.1)) }, () => { fb.RunMainMenuCommand('View/Maximize/Restore'); }, '');
   buttons.buttons.ext = new _button(panel.w - hw * 1, 0, hw, hh, { normal: _chr2img(icon_char.ext, panel.colours.normal, hw, hh), hover: _chr2img(icon_char.ext, 0xffffffff, hw, hh, 0xffc42b1c) }, () => { fb.RunMainMenuCommand('File/Exit'); }, '');
-  buttons.buttons.ltp = new _button(jsp.x, jsp.y - 1 + bs * 0, bs, bs, { normal: _chr2img(icon_char.ltp, panel.colours.normal, bs, bs), hover: _chr2img(icon_char.ltp, panel.colours.normal, bs, bs, panel.colours.background == 0xff000000 ? 0xff202020 : panel.colours.background) }, (x, y) => { jsp.ltp.toggle(); jsp.update(); }, '');
-  buttons.buttons.jsp = new _button(jsp.x, jsp.y - 1 + bs * 1, bs, bs, { normal: _chr2img(icon_char.jsp, panel.colours.normal, bs, bs), hover: _chr2img(icon_char.jsp, panel.colours.normal, bs, bs, panel.colours.background == 0xff000000 ? 0xff202020 : panel.colours.background) }, (x, y) => { jsp.exp.toggle(); on_size(); window.Repaint(); }, '');
-  buttons.buttons.pls = new _button(jsp.x, jsp.y - 1 + bs * 2, jsp.w, bs, { normal: _chr2img(icon_char.pls, panel.colours.normal, jsp.w, bs, 0, true, true), hover: _chr2img(icon_char.pls, panel.colours.normal, jsp.w, bs, panel.colours.background == 0xff000000 ? 0xff202020 : panel.colours.background, true, true) }, (x, y) => { jsp.rtp.b = 0; jsp.update(); jsp.repaint(); }, '');
-  buttons.buttons.bio = new _button(jsp.x, jsp.y - 1 + bs * 3, jsp.w, bs, { normal: _chr2img(icon_char.bio, panel.colours.normal, jsp.w, bs, 0, true, true), hover: _chr2img(icon_char.bio, panel.colours.normal, jsp.w, bs, panel.colours.background == 0xff000000 ? 0xff202020 : panel.colours.background, true, true) }, (x, y) => { jsp.rtp.b = 1; jsp.update(); jsp.repaint(); }, '');
-  buttons.buttons.plm = new _button(jsp.x, jsp.y - 1 + bs * 4, bs, bs, { normal: _chr2img(icon_char.plm, panel.colours.normal, bs, bs), hover: _chr2img(icon_char.plm, panel.colours.highlight, bs, bs) }, (x, y) => { plm.context_menu(x, y); }, '');
-  buttons.buttons.prf = new _button(jsp.x, jsp.y - 1 + jsp.h - bs, jsp.w, bs, { normal: _chr2img(icon_char.prf, panel.colours.normal, jsp.w, bs, 0, true, true), hover: _chr2img(icon_char.prf, panel.colours.normal, jsp.w, bs, panel.colours.background == 0xff000000 ? 0xff202020 : panel.colours.background, true, true) }, (x, y) => { fb.RunMainMenuCommand('File/Preferences'); }, '');
+  buttons.buttons.ltp = new _button(jsp.x, jsp.y + bs * 0, bs, bs, { normal: _chr2img(icon_char.ltp, panel.colours.normal, bs, bs), hover: _chr2img(icon_char.ltp, panel.colours.normal, bs, bs, panel.colours.background == 0xff000000 ? 0xff202020 : panel.colours.background) }, (x, y) => { jsp.ltp.toggle(); jsp.update(); }, '');
+  buttons.buttons.jsp = new _button(jsp.x, jsp.y + bs * 1, bs, bs, { normal: _chr2img(icon_char.jsp, panel.colours.normal, bs, bs), hover: _chr2img(icon_char.jsp, panel.colours.normal, bs, bs, panel.colours.background == 0xff000000 ? 0xff202020 : panel.colours.background) }, (x, y) => { jsp.exp.toggle(); on_size(); window.Repaint(); }, '');
+  buttons.buttons.pls = new _button(jsp.x, jsp.y + bs * 2, jsp.w, bs, { normal: _chr2img(icon_char.pls, panel.colours.normal, jsp.w, bs, 0, true, true), hover: _chr2img(icon_char.pls, panel.colours.normal, jsp.w, bs, panel.colours.background == 0xff000000 ? 0xff202020 : panel.colours.background, true, true) }, (x, y) => { jsp.rtp.b = 0; jsp.update(); jsp.repaint(); }, '');
+  buttons.buttons.bio = new _button(jsp.x, jsp.y + bs * 3, jsp.w, bs, { normal: _chr2img(icon_char.bio, panel.colours.normal, jsp.w, bs, 0, true, true), hover: _chr2img(icon_char.bio, panel.colours.normal, jsp.w, bs, panel.colours.background == 0xff000000 ? 0xff202020 : panel.colours.background, true, true) }, (x, y) => { jsp.rtp.b = 1; jsp.update(); jsp.repaint(); }, '');
+  buttons.buttons.plm = new _button(jsp.x, jsp.y + bs * 4, bs, bs, { normal: _chr2img(icon_char.plm, panel.colours.normal, bs, bs), hover: _chr2img(icon_char.plm, panel.colours.highlight, bs, bs) }, (x, y) => { plm.context_menu(x, y); }, '');
+  buttons.buttons.prf = new _button(jsp.x, jsp.y + jsp.h - bs, jsp.w, bs, { normal: _chr2img(icon_char.prf, panel.colours.normal, jsp.w, bs, 0, true, true), hover: _chr2img(icon_char.prf, panel.colours.normal, jsp.w, bs, panel.colours.background == 0xff000000 ? 0xff202020 : panel.colours.background, true, true) }, (x, y) => { fb.RunMainMenuCommand('File/Preferences'); }, '');
 }
 
 function on_colours_changed() { panel.colours_changed(); buttons.update(); esl.colours_changed(); window.Repaint(); }
 function on_font_changed() { panel.font_changed(); buttons.update(); esl.font_changed(); window.Repaint(); }
 function on_item_focus_change() { panel.item_focus_change(); }
 function on_key_down(vkey) { panel.key_down(vkey); plm.key_down(vkey); }
-function on_mouse_lbtn_dblclk(x, y) { plm.lbtn_dblclk(x, y); }
+function on_mouse_lbtn_dblclk(x, y) { plm.lbtn_dblclk(x, y); if (fb.IsPlaying && status.lbtn_dblclk(x, y)) { return; } }
 function on_mouse_lbtn_down(x, y) { plm.lbtn_down(x, y); }
-function on_mouse_lbtn_up(x, y) { if (fb.IsPlaying && status.lbtn_up(x, y)) { return; } if (buttons.lbtn_up(x, y)) { return; } }
+function on_mouse_lbtn_up(x, y) { buttons.lbtn_up(x, y); }
 function on_mouse_leave() { buttons.leave(); }
 function on_mouse_move(x, y) { plm.move(x, y); buttons.move(x, y); }
 function on_mouse_rbtn_down(x, y) { plm.rbtn_down(x, y); }

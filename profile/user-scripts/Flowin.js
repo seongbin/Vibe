@@ -60,10 +60,32 @@ function _volume() {
 }
 
 buttons.update = () => {
+  buttons.buttons.shuffle = new _button(panel.w / 2 - bs * 2.5 , panel.h - bs, bs, bs, { normal : _chr2img( (plman.PlaybackOrder == 0) ? icon_char.shf0 : (plman.PlaybackOrder == 4) ? icon_char.shf1 : icon_char.shf0, (plman.PlaybackOrder == 0) ? panel.colours.gray : (plman.PlaybackOrder == 4) ? _blendColours(panel.colours.highlight, panel.colours.gray, 0.35) : panel.colours.gray, bs, bs), hover : _chr2img( (plman.PlaybackOrder == 0) ? icon_char.shf0 : (plman.PlaybackOrder == 4) ? icon_char.shf1 : icon_char.shf0, (plman.PlaybackOrder == 0) ? 0xffffffff : (plman.PlaybackOrder == 4) ? panel.colours.highlight : 0xffffffff, bs, bs, 0x96000000) }, (x, y) => { buttons.shuffle(); }, '');
   buttons.buttons.prev = new _button(panel.w / 2 - bs * 1.5 , panel.h - bs, bs, bs, {normal : _chr2img(icon_char.prev, panel.colours.gray, bs, bs), hover : _chr2img(icon_char.prev, 0xffffffff, bs, bs, 0x96000000)}, (x, y) => { fb.Prev(); }, '');
-  buttons.buttons.play = new _button(panel.w / 2 - bs / 2, panel.h - bs, bs, bs, {normal : _chr2img(!fb.IsPlaying || fb.IsPaused ? icon_char.pause : icon_char.play, panel.colours.gray, bs, bs), hover : _chr2img(!fb.IsPlaying || fb.IsPaused ? icon_char.pause : icon_char.play, 0xffffffff, bs, bs, 0x96000000)}, (x, y) => { fb.PlayOrPause(); }, '');
-  buttons.buttons.next = new _button(panel.w / 2 + bs / 2, panel.h - bs, bs, bs, {normal : _chr2img(icon_char.next, panel.colours.gray, bs, bs), hover : _chr2img(icon_char.next, 0xffffffff, bs, bs, 0x96000000)}, (x, y) => { fb.Next(); }, '');
+  buttons.buttons.play = new _button(panel.w / 2 - bs * 0.5, panel.h - bs, bs, bs, {normal : _chr2img(!fb.IsPlaying || fb.IsPaused ? icon_char.pause : icon_char.play, panel.colours.gray, bs, bs), hover : _chr2img(!fb.IsPlaying || fb.IsPaused ? icon_char.pause : icon_char.play, 0xffffffff, bs, bs, 0x96000000)}, (x, y) => { fb.PlayOrPause(); }, '');
+  buttons.buttons.next = new _button(panel.w / 2 + bs * 0.5, panel.h - bs, bs, bs, {normal : _chr2img(icon_char.next, panel.colours.gray, bs, bs), hover : _chr2img(icon_char.next, 0xffffffff, bs, bs, 0x96000000)}, (x, y) => { fb.Next(); }, '');
+  buttons.buttons.repeat = new _button(panel.w / 2 + bs * 1.5, panel.h - bs, bs, bs, { normal : _chr2img( (plman.PlaybackOrder == 0) ? icon_char.rpt0 : (plman.PlaybackOrder == 2) ? icon_char.rpt1 : icon_char.rpt0, (plman.PlaybackOrder == 0) ? panel.colours.gray : (plman.PlaybackOrder == 2) ? _blendColours(panel.colours.highlight, panel.colours.gray, 0.35) : panel.colours.gray, bs, bs), hover : _chr2img( (plman.PlaybackOrder == 0) ? icon_char.rpt0 : (plman.PlaybackOrder == 2) ? icon_char.rpt1 : icon_char.rpt0, (plman.PlaybackOrder == 0) ? 0xffffffff : (plman.PlaybackOrder == 2) ? panel.colours.highlight : 0xffffffff, bs, bs, 0x96000000) }, (x, y) => { buttons.repeat(); }, '');
   buttons.buttons.exit = new _button(panel.w - bs, 0, bs, bs, {normal : _chr2img(icon_char.ext, panel.colours.gray, bs, bs), hover : _chr2img(icon_char.ext, 0xffffffff, bs, bs, 0x96000000)}, (x, y) => { fb.RunMainMenuCommand('View/Flowin/Pip/Show'); }, '');
+}
+
+buttons.repeat = () => {
+	if (plman.PlaybackOrder !== 2) {
+		plman.PlaybackOrder = 2;
+	}
+	else {
+		plman.PlaybackOrder = 0;
+	}
+	window.Repaint();
+}
+
+buttons.shuffle = () => {
+	if (plman.PlaybackOrder !== 4) {
+    plman.PlaybackOrder = 4;
+	}
+	else {
+		plman.PlaybackOrder = 0;
+	}
+	window.Repaint();
 }
 
 function on_colours_changed() { panel.colours_changed(); buttons.update(); window.Repaint(); }
@@ -81,7 +103,7 @@ function on_mouse_wheel(s) { if (s == 1) { fb.VolumeUp(); } else { fb.VolumeDown
 function on_playback_dynamic_info_track() { panel.item_focus_change(); }
 function on_playback_edited() {}
 function on_playback_new_track() { panel.item_focus_change(); }
-function on_playback_order_changed() {}
+function on_playback_order_changed () { buttons.update(); }
 function on_playback_stop(reason) { if (reason != 2) { panel.item_focus_change(); } buttons.update(); }
 function on_playback_pause() { seekbar.playback_pause(); buttons.update(); }
 function on_playback_starting() { buttons.update(); }

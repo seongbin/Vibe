@@ -12,7 +12,7 @@ ppt = {
   group_header_row_num: 3,
   group_header_row_num_min: 0,
   scroll_step: 3,
-  scroll_smoothness: 1.25,
+  scroll_smoothness: 1.5,
   row_height: scale(20),
   auto_collapse: window.GetProperty("_DISPLAY: Autocollapse Groups", false),
   show_cover: window.GetProperty("_DISPLAY: Show Cover Art", true),
@@ -1259,11 +1259,11 @@ function _brw(obj) {
                 // default track bg (odd/even)
                 if (ppt.show_group_headers) {
                   if (this.rows[i].albumTrackId % 2 == 0 && ppt.show_stripes) {
-                    gr.FillSolidRect(ax, ay, aw, ah, g_colour_normal_txt & 0x08ffffff);
+                    gr.FillSolidRect(ax, ay, aw, ah, g_colour_normal_txt & 0x06ffffff);
                   }
                 } else {
                   if (this.rows[i].playlistTrackId % 2 == 0 && ppt.show_stripes) {
-                    gr.FillSolidRect(ax, ay, aw, ah, g_colour_normal_txt & 0x08ffffff);
+                    gr.FillSolidRect(ax, ay, aw, ah, g_colour_normal_txt & 0x06ffffff);
                   }
                 }
               }
